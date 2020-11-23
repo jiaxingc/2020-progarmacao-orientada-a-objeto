@@ -1,0 +1,199 @@
+
+package semana;
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import bo.Aluno;
+import jdbc.*;
+
+
+
+
+
+
+
+public class AlunoDAO {
+
+	public void create(Aluno aluno)
+
+	{
+		Connection con = ConnectionFactory.getConnection();//连接BD
+
+		PreparedStatement s = null;//参数化查询
+
+		String sql = "insert into aluno(cpf, nome, sexo) values (?, ?, ?)";//插入参数
+
+		try//try代码块抛出错误
+
+		{
+			s = con.prepareStatement(sql);  //instancia uma instrucao sql，con是Connection的对象，prepareStatement重要的接口对象
+
+			s.setString(1, aluno.getCpf()); //primeiro parametro da query
+
+			s.setString(2, aluno.getNome());
+
+			s.setString(3, aluno.getSexo());
+
+			s.executeUpdate();
+
+			System.out.println("[AlunoDAO] Aluno incluido com sucesso");
+
+
+		} catch (SQLException e)//捕获任何发生的异常
+
+		{
+
+			System.out.println("Erro na tentativa de insercao: "+ e.getMessage());
+
+		}
+
+		finally {//异常处理结构的最后运行
+
+			ConnectionFactory.closeConnection(con, s);
+
+		}
+
+	}
+
+	public void delete(Aluno aluno)
+
+	{
+
+		Connection con = ConnectionFactory.getConnection();//创建到JMS 提供程序的连接的对象,链接工厂
+
+		PreparedStatement s = null;
+
+		String sql = "delete from aluno where cpf = ?";
+
+		try
+
+		{
+
+			s = con.prepareStatement(sql);  //instancia uma instrucao sql
+
+			s.setString(1, aluno.getCpf()); //primeiro parametro da query
+
+			s.executeUpdate();
+
+			System.out.println("[AlunoDAO] Aluno excluido com sucesso");
+
+		} catch (SQLException e)
+
+		{
+
+			System.out.println("Erro na tentativa de insercao: 2"+ e.getMessage());
+
+		}
+
+		finally {
+
+			ConnectionFactory.closeConnection(con, s);
+
+		}
+	}
+
+	public void update(Aluno aluno)
+
+	{
+
+		Connection con = ConnectionFactory.getConnection();
+
+		PreparedStatement s = null;
+
+		String sql = "update aluno set cpf=? , nome=? , sexo=? where cpf=?";
+
+		try
+
+		{
+
+			s = con.prepareStatement(sql);  //instancia uma instrucao sql
+
+			s.setString(1, aluno.getCpf()); //primeiro parametro da query
+
+			s.setString(2, aluno.getNome());
+
+			s.setString(3, aluno.getSexo());
+
+			s.setString(4, aluno.getCpf());
+
+			s.executeUpdate();
+
+			System.out.println("[AlunoDAO] Aluno alterado com sucesso");
+
+		} catch (SQLException e)
+
+		{
+
+			System.out.println("Erro na tentativa de insercao: 2"+ e.getMessage());
+
+		}
+
+		finally {
+
+			ConnectionFactory.closeConnection(con, s);
+
+		}
+
+	}
+
+
+	
+
+
+	public void read(Aluno aluno)
+
+	{
+
+		Connection con = ConnectionFactory.getConnection();
+
+		PreparedStatement s = null;
+
+		String sql = "select cpf,nome,sexo from aluno where cpf=?";
+
+		try
+
+		{
+			s = con.prepareStatement(sql);  //instancia uma instrucao sql
+
+			s.setString(1, aluno.getCpf()); //primeiro parametro da query
+
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()){
+
+				System.out.println("*********************************");
+
+				System.out.println("Cpf : " + rs.getString("cpf"));
+
+				System.out.println("Nome : " + rs.getString("nome"));
+
+				System.out.println("Sexo : " + rs.getString("sexo"));
+
+				System.out.println("*********************************");
+
+			}
+
+		} catch (SQLException e)
+
+		{
+
+			System.out.println("entrou aqui");
+
+			System.out.println("Erro na tentativa de insercao: 2"+ e.getMessage());
+
+		}
+
+		finally {
+
+			ConnectionFactory.closeConnection(con, s);
+
+		}
+	}
+
+}
+
+
